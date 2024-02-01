@@ -1,14 +1,18 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react";
 
-const AddTaskModal = ({ onSave }) => {
-  const [task, setTask] = useState({
-    id: crypto.randomUUID(),
-    title: "",
-    description: "",
-    tags: [],
-    priority: "",
-    isFavourite: false,
-  });
+const AddTaskModal = ({ onSave, update, onClose }) => {
+  const [isAdd, setIsAdd] = useState(Object.is(update, null));
+  const [task, setTask] = useState(
+    update || {
+      id: crypto.randomUUID(),
+      title: "",
+      description: "",
+      tags: [],
+      priority: "",
+      isFavourite: false,
+    }
+  );
   const handleChange = (e) => {
     //e.preventDefault();
     let name = e.target.name;
@@ -27,12 +31,12 @@ const AddTaskModal = ({ onSave }) => {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          onSave(task);
+          onSave(task, isAdd);
         }}
         className="mx-auto my-10 w-full max-w-[740px] rounded-xl border border-[#FEFBFB]/[36%] bg-[#191D26] p-9 max-md:px-4 lg:my-20 lg:p-11 z-10 absolute top-1/4 left-1/4"
       >
         <h2 className="mb-9 text-center text-2xl font-bold text-white lg:mb-11 lg:text-[28px]">
-          Add New Task
+          {isAdd ? "Add New Task" : "Edit Task"}
         </h2>
 
         <div className="space-y-9 text-white lg:space-y-10">
@@ -95,13 +99,19 @@ const AddTaskModal = ({ onSave }) => {
           </div>
         </div>
 
-        <div className="mt-16 flex justify-center lg:mt-20">
+        <div className="mt-16 flex justify-between lg:mt-20">
+          <button
+            className="rounded bg-red-600 px-4 py-2 text-white transition-all hover:opacity-80"
+            onClick={onClose}
+          >
+            Close
+          </button>
           <button
             type="submit"
             className="rounded bg-blue-600 px-4 py-2 text-white transition-all hover:opacity-80"
             // onClick={() => onSave(task)}
           >
-            Create new Task
+            {isAdd ? "Create new Task" : "Edit Task"}
           </button>
         </div>
       </form>
