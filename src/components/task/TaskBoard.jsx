@@ -49,6 +49,22 @@ const TaskBoard = () => {
     tasks.length = 0;
     setTasks([...tasks]);
   }
+  function handleFav(taskId, seen) {
+    let toggledTask = tasks.map((task) => {
+      if (task.id === taskId) {
+        return { ...task, isFavourite: !seen };
+      } else {
+        return task;
+      }
+    });
+    setTasks(toggledTask);
+  }
+  function handleSearch(searchItem) {
+    let filteredSearch = tasks.filter((task) => {
+      return task.title.toLowerCase().includes(searchItem.toLowerCase());
+    });
+    setTasks([...filteredSearch]);
+  }
   return (
     <>
       <section className="mb-20" id="tasks">
@@ -60,7 +76,7 @@ const TaskBoard = () => {
           />
         )}
         <div className="container">
-          <SearchTask />
+          <SearchTask onSearch={handleSearch} />
           <div className="rounded-xl border border-[rgba(206,206,206,0.12)] bg-[#1D212B] px-6 py-8 md:px-9 md:py-16">
             <TaskActions
               onAddClick={() => setShowAddModal(true)}
@@ -70,6 +86,7 @@ const TaskBoard = () => {
               tasks={tasks}
               onEdit={handleEdit}
               onDelete={handleDelete}
+              onFav={handleFav}
             />
           </div>
         </div>
